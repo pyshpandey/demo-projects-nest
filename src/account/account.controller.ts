@@ -1,6 +1,6 @@
 import { Controller, Post, Get, Body, Param, ParseIntPipe } from '@nestjs/common';
-import { AccountDto } from './dto/accountDto';
 import { AccountService } from './account.service';
+import { CreateAccountDto } from './dto/create-account.dto';
 
 @Controller('account')
 export class AccountController {
@@ -9,20 +9,20 @@ export class AccountController {
         private readonly accountService: AccountService
     ) {}
 
+    @Post('create')
+    create(@Body() createAccountDto: CreateAccountDto) {
+        return this.accountService.create(createAccountDto);
+    }
+
     @Get()
-    async getAllAccounts() {
-        return await this.accountService.getAllAccounts();
+    getAllAccounts() {
+        return this.accountService.findAll();
     }
 
     @Get('getAccount/:id')
-    async getAccountById(@Param('id', ParseIntPipe) accountId: number) {
-        return await this.accountService.getAccountById(accountId);
-    }
-
-
-    @Post('create')
-    async create(@Body() accountData: AccountDto) {
-        return await this.accountService.createAccount(accountData);
+    // getAccountById(@Param('id', ParseIntPipe) accountId: number) {
+    getAccountById(@Param('id') id: string) {
+        return this.accountService.findOne(id);
     }
 
     @Post('deposit')
